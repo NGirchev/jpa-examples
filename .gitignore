@@ -1,0 +1,12 @@
+# Maven project build directories
+/target
+
+# Eclipse-related files and directories
+/.classpath
+/.factorypath
+/.project
+/.settings
+
+# IDEA-related files and directories
+/*.iml
+/.idea
