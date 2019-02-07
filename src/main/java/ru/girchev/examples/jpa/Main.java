@@ -1,6 +1,7 @@
 package ru.girchev.examples.jpa;
 
-import ru.girchev.examples.jpa.domain.Employee;
+import org.apache.commons.lang3.ArrayUtils;
+import ru.girchev.examples.jpa.domain.chapter4.Employee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,12 +13,23 @@ public class Main {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
+
+        em.persist(createEmployee());
+
+        em.getTransaction().commit();
+        em.close(); emf.close();
+
+        System.out.println("FINISHED!!!");
+    }
+
+    private static Employee createEmployee() {
         Employee e = new Employee();
         e.setName("TestName");
-        em.persist(e);
-        em.getTransaction().commit();
-        em.close();
-        emf.close();
-        System.out.println("Hello World!");
+        e.setPhone("436346");
+        e.setCharacters(ArrayUtils.toObject("Test".toCharArray()));
+        e.setLongText("sdagdshsdhs");
+        e.setPicture("dshsdhd".getBytes());
+        e.setPic2("text".getBytes());
+        return e;
     }
 }
