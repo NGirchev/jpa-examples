@@ -30,12 +30,19 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.FIELD)
 //даже не смотря на hbm2ddl.auto=create схема не создаётся, падает с ошибкой пока не создам руками
-@Table(name = "employee", schema = "HR", catalog = "randomcatalog") //Some databases support the notion of a catalog.
-public class Employee {
+@Table(name = "employee1",
+        schema = "chapter4",
+        catalog = "randomcatalog") //Some databases support the notion of a catalog.
+public class Employee1 {
 
     @Id
-    @SequenceGenerator(name = "empl_gen", sequenceName = "empl_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empl_gen")
+    @SequenceGenerator(name = "empl_gen_java",
+            sequenceName = "empl_seq_name_db",
+            initialValue = 1,
+            schema = "chapter4",
+            catalog = "randomcatalog",
+            allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "empl_gen_java")
     private Long id;
 
     private String name;
@@ -46,6 +53,30 @@ public class Employee {
     @Access(AccessType.PROPERTY)
     @Column(name = "emp_name")
     public String getName(){return name;}
+
+    @Column(name = "lastname"
+            , insertable = true
+            , updatable = true
+            , table = "employee1"
+//            , columnDefinition = "colDef VARCHAR(255) not null"
+            , length = 255
+            , precision = 0
+            , scale = 0
+            , unique = false
+            , nullable = true
+    )
+    private String lastname;
+
+    /**
+     length
+     precision
+     scale
+     nullable
+     unique
+     */
+    @Column(columnDefinition = "VARCHAR(255) NOT NULL UNIQUE", // priority
+            nullable = true, unique = false)
+    private String colDefinitionTest;
 
     @Transient
     private String phone;
@@ -67,7 +98,9 @@ public class Employee {
      */
     private byte[] pic2;
 
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY
+//    , optional = true
+    )
     @Lob
     private Character[] characters;
 
@@ -81,6 +114,9 @@ public class Employee {
      * EnumType.ORDINAL default, without @Enumerated
      */
     private EmployeeType type2 = EmployeeType.PART_TIME_EMPLOYEE;
+
+    @Embedded
+    private Address address;
 
     public enum EmployeeType {
         FULL_TIME_EMPLOYEE,

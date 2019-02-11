@@ -1,35 +1,32 @@
 package ru.girchev.examples.jpa;
 
-import org.apache.commons.lang3.ArrayUtils;
-import ru.girchev.examples.jpa.domain.chapter4.Employee;
-
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+/**
+ There are two transaction-management types supported by JPA. The first is resource-local
+ transactions, which are the native transactions of the JDBC drivers that are referenced by a
+ persistence unit. The second transaction-management type is JTA transactions, which are the
+ transactions of the Java EE server, supporting multiple participating resources, transaction lifecycle
+ management, and distributed XA transactions
+ */
 public class Main {
 
+    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
+
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
+        Chapter4 chapter4 = new Chapter4(emf);
+        Chapter5 chapter5 = new Chapter5(emf);
+        Chapter6 chapter6 = new Chapter6(emf);
 
-        em.persist(createEmployee());
+        chapter4.makeIds();
+        chapter4.makeRelations();
+        chapter5.makeCollections();
+        chapter5.makeMaps();
+        chapter6.testContext();
+        chapter6.joinTransaction();
 
-        em.getTransaction().commit();
-        em.close(); emf.close();
-
+        emf.close();
         System.out.println("FINISHED!!!");
-    }
-
-    private static Employee createEmployee() {
-        Employee e = new Employee();
-        e.setName("TestName");
-        e.setPhone("436346");
-        e.setCharacters(ArrayUtils.toObject("Test".toCharArray()));
-        e.setLongText("sdagdshsdhs");
-        e.setPicture("dshsdhd".getBytes());
-        e.setPic2("text".getBytes());
-        return e;
     }
 }
