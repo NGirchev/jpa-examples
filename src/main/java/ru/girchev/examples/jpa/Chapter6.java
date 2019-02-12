@@ -1,12 +1,9 @@
 package ru.girchev.examples.jpa;
 
-import ru.girchev.examples.jpa.domain.chapter4.Relations.Department;
 import ru.girchev.examples.jpa.domain.chapter4.Relations.Employee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 /**
  *
@@ -44,10 +41,10 @@ public class Chapter6 {
 
         EntityManager em2 = emf.createEntityManager();
 
-        System.out.println("AFTER TRANSACTION ENTITY IS IN PC1=" + em.contains(e));
+        System.out.println("AFTER TRANSACTION ENTITY IS IN PC1 TRUE=" + em.contains(e));
         System.out.println("In Cache="+emf.getCache().contains(Employee.class, e.getId()));
 
-        System.out.println("AFTER TRANSACTION ENTITY IS IN PC2=" + em2.contains(e));
+        System.out.println("AFTER TRANSACTION ENTITY IS IN PC2 FALSE=" + em2.contains(e));
 
         em.close();
         em2.close();
@@ -55,13 +52,14 @@ public class Chapter6 {
 
     /**
      * without JTA joinTransaction not working
+     * But in standalone PersistenceContext shares between transactions within one EntityManager
      */
     public void joinTransaction() {
         EntityManager em = emf.createEntityManager();
-        System.out.println("IS JOINED="+em.isJoinedToTransaction());
+        System.out.println("IS JOINED FALSE=" + em.isJoinedToTransaction());
         //WARN: HHH000027: Calling joinTransaction() on a non JTA EntityManager
         em.joinTransaction();
-        System.out.println("AFTER JOIN="+em.isJoinedToTransaction());
+        System.out.println("AFTER JOIN FALSE=" + em.isJoinedToTransaction());
         em.close();
     }
 
