@@ -1,9 +1,11 @@
 package ru.girchev.examples.jpa;
 
 import ru.girchev.examples.jpa.domain.chapter4.Relations.Employee;
+import ru.girchev.examples.jpa.domain.chapter6.Permission;
+import ru.girchev.examples.jpa.domain.chapter6.Role;
+import ru.girchev.examples.jpa.domain.chapter6.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.*;
 
 /**
  *
@@ -63,4 +65,110 @@ public class Chapter6 {
         em.close();
     }
 
+    /**
+     * Exception in thread "main" javax.persistence.EntityExistsException
+     */
+    public void testRollback() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User u = new User();
+        u.setId(123L);
+        u.setName("");
+        em.persist(u);
+        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            User u2 = new User();
+            u2.setId(123L);
+            u2.setName("");
+            em.persist(u2);
+//        System.out.println(em.getTransaction().getRollbackOnly()); //false
+            if(em.getTransaction().getRollbackOnly())
+                em.getTransaction().rollback();
+            else
+                em.getTransaction().commit();
+        } catch (EntityExistsException e) {
+            System.out.println("EntityExistsException RolledBack = " + em.getTransaction().getRollbackOnly());
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * The getReference() call is a performance optimization that should be
+     * used only when there is evidence to suggest that it will actually
+     * benefit the application
+     */
+    public void referenceFind() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User u = em.getReference(User.class, 123L);
+        Role r = new Role();
+        r.setUser(u);
+        em.persist(r);
+        em.getTransaction().commit();
+        try {
+            u = em.getReference(User.class, 124L);
+            u.setName("dsgds");
+        } catch (EntityNotFoundException e) {
+            System.out.println("EntityNotFoundException expected = " + e.getClass());
+        }
+        try {
+            em.getTransaction().begin();
+            u = em.getReference(User.class, 124L);
+            r = new Role();
+            r.setUser(u);
+            em.persist(r);
+            em.getTransaction().commit();
+        } catch (RollbackException e) {
+            System.out.println("RollbackException expected = " + e.getClass());
+        } finally {
+            em.close();
+        }
+    }
+
+    public void cascadeRemove() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User user = em.find(User.class, 123L);
+        em.remove(em.find(Role.class, 22L));
+        em.getTransaction().commit();
+        System.out.println("User not in context = " + em.contains(user));
+        System.out.println("User in-memory have role = " + user.getRole());
+        em.close();
+    }
+
+    public void oneToOnePersistDetached() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        User user = new User();
+        user.setId(124L);
+        user.setName("Name");
+        // In the book written - it's legal, without any exceptions
+        // In fact - IllegalStateException: TransientPropertyValueException
+//        user.setPermission(new Permission());
+        em.persist(user);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public void merge() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        User user = new User();
+        user.setId(124L);
+        user.setName("NewName");
+        em.merge(user);
+
+        User user2 = new User();
+        user2.setId(125L);
+        user2.setName("Name");
+        em.merge(user2);
+
+        Role r = new Role();
+        em.merge(r);
+        em.getTransaction().commit();
+        em.close();
+    }
 }

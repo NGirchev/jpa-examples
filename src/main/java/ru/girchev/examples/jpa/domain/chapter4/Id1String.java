@@ -19,6 +19,7 @@ import javax.persistence.*;
 @Data
 @Entity(name = "jpaschema")
 @Table(name = "chapter4.id1str")
+@NamedQuery(name = "jpaschema.boringQuery", query = "select j from jpaschema j")
 public class Id1String {
 
     /**
@@ -29,7 +30,6 @@ public class Id1String {
      * • Temporal types: java.util.Date, java.sql.Date
      */
     @Id
-
     //without sequenceName generate "hibernate_sequence"
     //@SequenceGenerator(name = "javaseq", sequenceName = "new_seq")
 

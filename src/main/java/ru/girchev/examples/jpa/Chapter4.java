@@ -25,6 +25,12 @@ public class Chapter4 {
 
         Employee1 employee1 = createEmployee();
         em.persist(employee1);
+        em.flush();
+
+        System.out.println("CONTAINS IN CACHE = " +
+                em.getEntityManagerFactory()
+                        .getCache().contains(Employee1.class, employee1.getId()));
+
         Employee2 employee2 = new Employee2();
         em.persist(employee2);
         // Without @GeneratedValue:

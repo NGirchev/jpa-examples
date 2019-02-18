@@ -9,7 +9,11 @@ import ru.girchev.examples.jpa.domain.chapter5.maps.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,7 +40,7 @@ public class Chapter5 {
         this.emf = emf;
     }
 
-    public void makeCollections() {
+    public void makeCollections() throws ParseException {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
@@ -53,10 +57,11 @@ public class Chapter5 {
         items.add(Item.builder().phone(Phone.builder().model("Bubble").build()).build());
         person.setItems(items);
 
-        List<Cat> cats = new ArrayList<Cat>();
-        cats.add(new Cat("Stepan"));
-        cats.add(new Cat("Lucky"));
-        cats.add(new Cat("Murzik"));
+        List<Cat> cats = new ArrayList<>();
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        cats.add(new Cat("Stepan", df.parse("12.01.2017")));
+        cats.add(new Cat("Lucky", df.parse("12.01.2016")));
+        cats.add(new Cat("Murzik", df.parse("12.01.2015")));
         person.setCats(cats);
 
         em.persist(person);
@@ -115,12 +120,15 @@ public class Chapter5 {
 
         Employee employee1 = new Employee();
         employee1.setName("Ivanov");
+        employee1.getPhones().put("WORK", "98356464");
+        employee1.getPhones().put("HOME", "43634767");
 
         department1.getEmployeeMap3().put("223", employee1);
         employee1.setDepartment(department1);
 
         Employee employee2 = new Employee();
         employee2.setName("Petrov");
+        employee2.getPhones().put("WORK", "436737574");
         department1.getEmployeeMap3().put("245", employee1);
         employee2.setDepartment(department1);
 

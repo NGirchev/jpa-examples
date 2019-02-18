@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,10 +28,14 @@ public class Cat {
     @Column(nullable = false, updatable = false)
     private String name;
 
+    @Temporal(TemporalType.DATE)
+    private Date birthDate;
+
     public Cat() {
     }
 
-    public Cat(String name) {
+    public Cat(String name, Date birthDate) {
         this.name = name;
+        this.birthDate = birthDate;
     }
 }

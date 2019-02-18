@@ -26,13 +26,16 @@ import javax.persistence.*;
  * @author Girchev N.A.
  * Date: 05.02.2019
  */
+@Cacheable(value = true)
 @Data
 @Entity
 @Access(AccessType.FIELD)
-//даже не смотря на hbm2ddl.auto=create схема не создаётся, падает с ошибкой пока не создам руками
+//даже не смотря на hbm2ddl.auto=create схема не создаётся, падает с ошибкой пока не
+// создам руками
 @Table(name = "employee1",
         schema = "chapter4",
         catalog = "randomcatalog") //Some databases support the notion of a catalog.
+@NamedQuery(name = "Employee1.getEmployeeType", query = "select e1.type1, e1.type2 from Employee1 e1")
 public class Employee1 {
 
     @Id
@@ -81,6 +84,7 @@ public class Employee1 {
     @Transient
     private String phone;
 
+    @Lob
     @Basic(fetch = FetchType.LAZY)
     private String longText;
 

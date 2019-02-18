@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,7 +28,7 @@ public class Employee {
     @MapKeyClass(String.class)
     @MapKeyColumn(name = "phones_key")
     @Column(name = "phones")
-    private Map phones;
+    private Map phones = new HashMap();
 
     /*
     -- auto-generated definition
@@ -58,7 +59,5 @@ CREATE TABLE employee_phones
     @ManyToOne(cascade = CascadeType.PERSIST) //department2_id
     private Department department2;
 
-    enum PhoneType {
-        HOME, MOBILE, WORK
-    }
+    private String building;
 }

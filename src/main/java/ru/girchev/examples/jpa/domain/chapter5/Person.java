@@ -3,6 +3,7 @@ package ru.girchev.examples.jpa.domain.chapter5;
 import lombok.Data;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortNatural;
+import org.hibernate.jpa.QueryHints;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +17,19 @@ import java.util.Set;
 @Data
 @Entity
 @Table(schema = "chapter5")
+@NamedQueries({
+        @NamedQuery(name = "Person.getCats",
+                query = "select c.name from " +
+                        "Person p, Cat c " +
+                        "where p.id = :pId",
+                hints = {
+                        @QueryHint(name = QueryHints.HINT_COMMENT, value = "Test Comment")
+                }),
+        @NamedQuery(name = "getNewCat",
+                query = "select c.name from " +
+                        "Person p, Cat c " +
+                        "where p = :p and c.birthDate > :date")
+})
 public class Person {
 
     @Id

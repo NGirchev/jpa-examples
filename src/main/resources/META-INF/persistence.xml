@@ -5,6 +5,13 @@
 
     <persistence-unit name="TestPU"  transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!--<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>-->
+
+        <!--<validation-mode>AUTO</validation-mode>-->
+        <!--<validation-mode>CALLBACK</validation-mode>-->
+        <!--<validation-mode>NONE</validation-mode>-->
+
         <properties>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/mytestdb" />
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
@@ -13,6 +20,16 @@
             <property name="hibernate.show_sql" value="false" />
             <property name="hibernate.format_sql" value="false" />
             <property name="hibernate.hbm2ddl.auto" value="create" />
+
+            <!--<property name="hibernate.cache.region.factory_class"-->
+                      <!--value="org.hibernate.cache.ehcache.internal.EhCacheRegionFactory"/>-->
+            <!--<property name="hibernate.cache.use_second_level_cache" value="false"/>-->
+            <!--<property name="hibernate.cache.use_query_cache" value="true"/>-->
+            <!--<property name="javax.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>-->
+
+            <!--<property name="javax.persistence.validation.group.pre-remove"-->
+                      <!--value="GroupName"/>-->
+
             <!--<property name="hbm2ddl.auto" value="create"/>-->
         </properties>
     </persistence-unit>
