@@ -60,4 +60,6 @@ CREATE TABLE employee_phones
     private Department department2;
 
     private String building;
+
+    private int t = 1;
 }

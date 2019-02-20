@@ -25,6 +25,7 @@ public class Main {
         Chapter10 chapter10 = new Chapter10(emf);
         Chapter11 chapter11 = new Chapter11(emf);
         Chapter12 chapter12 = new Chapter12(emf);
+        Common common = new Common(emf);
 
         chapter4.makeIds();
         chapter4.makeRelations();
@@ -53,6 +54,7 @@ public class Main {
         chapter11.resultSetTest();
 
         chapter12.test();
+        common.test();
 
         chapter9.init();
 

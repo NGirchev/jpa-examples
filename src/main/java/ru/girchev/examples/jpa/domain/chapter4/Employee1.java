@@ -35,7 +35,8 @@ import javax.persistence.*;
 @Table(name = "employee1",
         schema = "chapter4",
         catalog = "randomcatalog") //Some databases support the notion of a catalog.
-@NamedQuery(name = "Employee1.getEmployeeType", query = "select e1.type1, e1.type2 from Employee1 e1")
+@NamedQuery(name = "Employee1.getEmployeeType",
+        query = "select e1.type1, e1.type2 from Employee1 e1")
 public class Employee1 {
 
     @Id
