@@ -40,7 +40,6 @@ public class Chapter11 {
         employee2.setDep("Dep2");
         employee2.setExtra(4);
         employee2.setSalary(400);
-        employee2.setName("Name2");
         em.persist(employee2);
 
         em.getTransaction().commit();

@@ -121,13 +121,16 @@ public class Chapter8 {
 
         // 12.01.2015
         // Hibernate generated grammar does not include support for temporal literals.
-        // The JPA specification does include support for temporal literals but does not require persistence providers
-        // to translate from from the JPA syntax to the native syntax of the JDBC driver. From the JPA2 Spec 4.6.1:
-        // "The JDBC escape syntax may be used for the specification of date, time, and timestamp literals."
+        // The JPA specification does include support for temporal literals but does not
+        // require persistence providers to translate from from the JPA syntax to the
+        // native syntax of the JDBC driver. From the JPA2 Spec 4.6.1:
+        // "The JDBC escape syntax may be used for the specification of date, time,
+        // and timestamp literals."
         //
-        // The functionality lacking here as far as my needs are concerned is that you cannot do a select
-        // coalesce(somePath, someDateLiteral) query. You can still do a where somePath=someDate. As long as
-        // they're mapped entities you can throw whatever you want in a where clause.
+        // The functionality lacking here as far as my needs are concerned is that you
+        // cannot do a select coalesce(somePath, someDateLiteral) query. You can still
+        // do a where somePath=someDate. As long as they're mapped entities you can
+        // throw whatever you want in a where clause.
         query = "select c from " +
                 "Cat c where c.birthDate > {d '2015-01-12'}";
 //        System.out.println(em.createQuery(query));

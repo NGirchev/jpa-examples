@@ -1,16 +1,18 @@
 package ru.girchev.examples.jpa;
 
+import ru.girchev.examples.jpa.domain.chapter11.Employee11;
+import ru.girchev.examples.jpa.domain.chapter11.Employee11_;
+import ru.girchev.examples.jpa.domain.chapter5.maps.Department;
 import ru.girchev.examples.jpa.domain.chapter5.maps.Employee;
 import ru.girchev.examples.jpa.domain.chapter5.maps.Employee_;
-import ru.girchev.examples.jpa.domain.chapter8.Car;
-import ru.girchev.examples.jpa.domain.chapter8.Car_;
-import ru.girchev.examples.jpa.domain.chapter8.Garage;
+import ru.girchev.examples.jpa.domain.chapter8.*;
 import ru.girchev.examples.jpa.domain.chapter9.CarInfo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -186,11 +188,82 @@ public class Chapter9 {
                 .setParameter("nameParam", "Popov")
                 .getResultList());
 
-//        System.out.println(em.createQuery(
-//                "select c from Car c where ALL c.owners"
-//                + " (select co from CarOwner co" +
-//                        " where count(co.cars) > 1)").getResultList());
+        //show the car, which owner has only one car
+        System.out.println(getValues(em.createQuery(
+                "select distinct c.id, c.name from Car c join c.owners co " +
+                        " where 1 = (" +
+                        " select co2.cars.size from CarOwner co2 " +
+                        " where co2.id = co.id)"
+        ).getResultList()));
 
+        //and criteria for the same
+        CriteriaQuery<Object[]> q = cb.createQuery(Object[].class);
+        Root<Car> fromCar = q.from(Car.class);
+        ListJoin<Car, CarOwner> joinOwners = fromCar.join(Car_.owners);
+
+        Subquery<Long> sub = q.subquery(Long.class);
+        Root<CarOwner> fromCarOwnerSub = sub.from(CarOwner.class);
+        ListJoin<CarOwner, Car> joinCars = fromCarOwnerSub.join(CarOwner_.cars);
+        sub.select(cb.count(joinCars)).where(cb.equal(joinOwners.get(CarOwner_.id),
+                fromCarOwnerSub.get(CarOwner_.id)));
+        q.multiselect(fromCar.get(Car_.id), fromCar.get(Car_.name)).distinct(true)
+                .where(cb.equal(sub, 1));
+
+        System.out.println(getValues(em.createQuery(q).getResultList()));
+        // IN ('NY')
+        cb.in(null).value("NY");
+
+        CriteriaQuery<Object[]> caseQuery = cb.createQuery(Object[].class);
+        Root<Car> caseFromCar = caseQuery.from(Car.class);
+        caseQuery.multiselect(caseFromCar.get(Car_.name),
+                cb.selectCase()
+                        .when(cb.equal(caseFromCar.type(), Car.class), "CAR")
+                        .when(cb.equal(caseFromCar.type(), SUV.class), "SUV")
+                        .when(cb.equal(caseFromCar.type(), SportCar.class), "SPORT")
+                        .otherwise("NULL"));
+        System.out.println(getValues(em.createQuery(caseQuery).getResultList()));
+
+        //NPE??? WHY???
+//        CriteriaQuery<Object[]> caseQuery2 = cb.createQuery(Object[].class);
+//        Root<Car> caseFromCar2 = caseQuery2.from(Car.class);
+//        caseQuery2.multiselect(caseFromCar2.get(Car_.name),
+//                cb.selectCase(caseFromCar2.type())
+//                        .when(SUV.class, "SUV")
+//                        .when(SportCar.class, "SPORT")
+//                        .otherwise("CAR"));
+//        System.out.println(getValues(em.createQuery(caseQuery2).getResultList()));
+
+        System.out.println(em.createQuery(
+                "select coalesce(e.name, cast(e.id as string)) from Employee11 e"
+        ).getResultList());
+
+        CriteriaQuery<String> coalesceQuery = cb.createQuery(String.class);
+        Root<Employee11> coalesceFrom = coalesceQuery.from(Employee11.class);
+        Path<String> stringPath = coalesceFrom.get(Employee11_.name);
+        Expression<String> as = coalesceFrom.get(Employee11_.id).as(String.class);
+
+        coalesceQuery.select(cb.coalesce(stringPath, as));
+
+        System.out.println(em.createQuery(coalesceQuery).getResultList());
+
+        //function initcap for first letter up
+        CriteriaQuery<String> c = cb.createQuery(String.class);
+        Root<Car> car = c.from(Car.class);
+        c.select(cb.function("initcap", String.class, car.get("name")))
+        .orderBy(cb.desc(car.get(Car_.name)));
+        System.out.println(em.createQuery(c).getResultList());
         em.close();
+    }
+
+    private List<List<String>> getValues(List list) {
+        List<List<String>> res = new ArrayList<>();
+        for (Object obj : list) {
+            List<String> strings = new ArrayList<>();
+            for (Object o : (Object[]) obj){
+                strings.add(o.toString());
+            }
+            res.add(strings);
+        }
+        return res;
     }
 }
