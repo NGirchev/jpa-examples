@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * @author Girchev N.A.
@@ -21,5 +20,5 @@ public class Permission {
     private Long id;
 
     @OneToOne(mappedBy = "permission")
-    private User user;
+    private User_6 user;
 }

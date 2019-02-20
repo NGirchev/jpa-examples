@@ -13,14 +13,14 @@ import java.util.Collection;
 @Data
 @Entity
 @Table(schema = "chapter4relations")
-public class Department {
+public class Department_4 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @OneToMany(mappedBy = "department"
-            , targetEntity = Employee.class
+            , targetEntity = EmployeeRel_4.class
             , orphanRemoval = false
             , fetch = FetchType.LAZY
             , cascade = {}

@@ -1,14 +1,13 @@
 package ru.girchev.examples.jpa;
 
 import ru.girchev.examples.jpa.domain.chapter11.EmpWrapper;
-import ru.girchev.examples.jpa.domain.chapter11.Employee;
+import ru.girchev.examples.jpa.domain.chapter11.Employee11;
 import ru.girchev.examples.jpa.domain.chapter5.maps.Department;
 
 import javax.persistence.*;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.validation.constraints.Max;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +29,14 @@ public class Chapter11 {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
-        Employee employee = new Employee();
+        Employee11 employee = new Employee11();
         employee.setDep("Dep");
         employee.setExtra(2);
         employee.setSalary(200);
         employee.setName("Name");
         em.persist(employee);
 
-        Employee employee2 = new Employee();
+        Employee11 employee2 = new Employee11();
         employee2.setDep("Dep2");
         employee2.setExtra(4);
         employee2.setSalary(400);
@@ -46,8 +45,8 @@ public class Chapter11 {
 
         em.getTransaction().commit();
 
-        List<Employee> resultList = em
-                .createNamedQuery("emplFind", Employee.class)
+        List<Employee11> resultList = em
+                .createNamedQuery("emplFind", Employee11.class)
                 .getResultList();
         System.out.println("emplFind: "+resultList);
 
@@ -78,7 +77,7 @@ public class Chapter11 {
 //         em.find(Employee.class, employee3.getId(), LockModeType.PESSIMISTIC_WRITE);
 //         em.find(Employee.class, employee3.getId(), LockModeType.PESSIMISTIC_FORCE_INCREMENT);
 
-        Employee employee3 = new Employee();
+        Employee11 employee3 = new Employee11();
         employee3.setDep("Dep3");
         employee3.setExtra(3);
         employee3.setSalary(300);
@@ -115,8 +114,8 @@ public class Chapter11 {
     /**
      * OPTIMISTIC WRITE
      */
-    public void addManager(EntityManager em, int id, Employee emp) {
-        Employee manager = em.find(Employee.class, id);
+    public void addManager(EntityManager em, int id, Employee11 emp) {
+        Employee11 manager = em.find(Employee11.class, id);
         em.lock(manager, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
         manager.getStuff().add(emp);
         emp.setManager(manager);
@@ -127,6 +126,6 @@ public class Chapter11 {
         properties.put("javax.persistence.lock.timeout", 1000L);
         properties.put("javax.persistence.lock.scope", PessimisticLockScope.EXTENDED);
         properties.put("javax.persistence.lock.scope", PessimisticLockScope.NORMAL); //default
-        em.find(Employee.class, id, LockModeType.PESSIMISTIC_FORCE_INCREMENT, properties);
+        em.find(Employee11.class, id, LockModeType.PESSIMISTIC_FORCE_INCREMENT, properties);
     }
 }

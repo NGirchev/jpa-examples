@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(schema = "chapter4relations")
-public class Document {
+public class Document_4 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,5 +24,5 @@ public class Document {
      * document_employee and employee_document - data will be duplicated
      */
     @ManyToMany(mappedBy = "documents")
-    private List<Employee> employees = new ArrayList<Employee>();
+    private List<EmployeeRel_4> employees = new ArrayList<EmployeeRel_4>();
 }

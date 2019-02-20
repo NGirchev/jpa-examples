@@ -11,12 +11,12 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(schema = "chapter7")
-public class B {
+public class B_7 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    private A a;
+    private A_7 a;
 }

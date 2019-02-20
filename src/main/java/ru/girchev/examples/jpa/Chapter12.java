@@ -1,10 +1,6 @@
 package ru.girchev.examples.jpa;
 
-import ru.girchev.examples.jpa.domain.Address2;
-import ru.girchev.examples.jpa.domain.Realization1;
-import ru.girchev.examples.jpa.domain.Realization2;
-import ru.girchev.examples.jpa.domain.Test;
-import ru.girchev.examples.jpa.domain.chapter12.Employee;
+import ru.girchev.examples.jpa.domain.chapter12.Employee12;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,7 +19,7 @@ public class Chapter12 {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
-        Employee e = new Employee();
+        Employee12 e = new Employee12();
         e.setName("Name");
         em.persist(e);
 

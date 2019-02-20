@@ -23,15 +23,15 @@ public class Chapter4 {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
-        Employee1 employee1 = createEmployee();
+        Employee_4_1 employee1 = createEmployee();
         em.persist(employee1);
         em.flush();
 
         System.out.println("CONTAINS IN CACHE = " +
                 em.getEntityManagerFactory()
-                        .getCache().contains(Employee1.class, employee1.getId()));
+                        .getCache().contains(Employee_4_1.class, employee1.getId()));
 
-        Employee2 employee2 = new Employee2();
+        Employee_4_2 employee2 = new Employee_4_2();
         em.persist(employee2);
         // Without @GeneratedValue:
         // IdentifierGenerationException: ids for this class must be manually
@@ -44,7 +44,7 @@ public class Chapter4 {
         System.out.println("SEQUENCE ID expect 1 = " + employee1.getId());
         System.out.println("IDENTITY ID expect 1 = " + id1String.getId()); // but, it is not accurate, before commin
 
-        Address address = new Address();
+        Address_4 address = new Address_4();
         address.setBuilding("1");
         address.setStreet("Lenina");
         employee1.setAddress(address);
@@ -63,18 +63,18 @@ public class Chapter4 {
     public void makeRelations() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Employee employee = new Employee();
+        EmployeeRel_4 employee = new EmployeeRel_4();
 
-        Department department = new Department();
+        Department_4 department = new Department_4();
         department.setName("TestName");
         department.getEmployees().add(employee);
 
         ParkingSpace parkingSpace = new ParkingSpace();
 
-        Document document = new Document();
+        Document_4 document = new Document_4();
         document.getEmployees().add(employee);
 
-        Project project = new Project();
+        Project_4 project = new Project_4();
         project.getEmployees().add(employee);
 
         employee.setDepartment(department);
@@ -90,13 +90,13 @@ public class Chapter4 {
 
         em.getTransaction().commit();
 
-        if(em.find(Document.class, document.getId()).getEmployees().size() != 1)
+        if(em.find(Document_4.class, document.getId()).getEmployees().size() != 1)
             throw new RuntimeException();
         em.close();
     }
 
-    private static Employee1 createEmployee() {
-        Employee1 e = new Employee1();
+    private static Employee_4_1 createEmployee() {
+        Employee_4_1 e = new Employee_4_1();
         e.setName("TestName");
         e.setPhone("436346");
         e.setCharacters(ArrayUtils.toObject("Test".toCharArray()));

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(schema = "chapter4")
-public class Employee2 {
+public class Employee_4_2 {
 
     @Id
     @SequenceGenerator(name = "empl_gen_java",
@@ -24,5 +24,5 @@ public class Employee2 {
     @AttributeOverrides({
             @AttributeOverride(name = "building", column = @Column(name = "b"))
     })
-    private Address address;
+    private Address_4 address;
 }

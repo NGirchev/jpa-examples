@@ -32,7 +32,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(schema = "chapter4relations")
-public class Employee {
+public class EmployeeRel_4 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,7 +44,7 @@ public class Employee {
      */
     @ManyToOne
     @JoinColumn(name = "department_id")
-    private Department department;
+    private Department_4 department;
 
     /**
      * Unidirectional:
@@ -76,11 +76,11 @@ public class Employee {
     @ManyToMany(cascade = {}
 //            , mappedBy = ""
             , fetch = FetchType.LAZY
-            , targetEntity = Document.class
+            , targetEntity = Document_4.class
 //            , targetEntity = void.class
     )
     @JoinTable(schema = "chapter4relations") //I wanted example without that, but order is important
-    private List<Document> documents = new ArrayList<Document>();
+    private List<Document_4> documents = new ArrayList<Document_4>();
 
     @ManyToMany
     @JoinTable(name="employee_project",
@@ -93,5 +93,5 @@ public class Employee {
 //            , foreignKey =
 //            , inverseForeignKey =
     )
-    private List<Project> projects = new ArrayList<Project>();
+    private List<Project_4> projects = new ArrayList<Project_4>();
 }

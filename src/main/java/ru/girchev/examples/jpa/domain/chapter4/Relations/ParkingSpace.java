@@ -18,5 +18,5 @@ public class ParkingSpace {
     private Long id;
 
     @OneToOne(mappedBy = "parkingSpace")
-    private Employee owner;
+    private EmployeeRel_4 owner;
 }

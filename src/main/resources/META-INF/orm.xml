@@ -30,19 +30,19 @@ http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
         </attributes>
     </mapped-superclass>
 
-    <entity class="Employee"
-            name="Employee2"
+    <entity class="ru.girchev.examples.jpa.domain.chapter12.Employee12"
+            name="Employee12"
             metadata-complete="false">
         <table schema="chapter12"></table>
 
         <named-query name="findEmpsWithName">
-            <query>SELECT e FROM ru.girchev.examples.jpa.domain.chapter12.Employee e WHERE e.name LIKE :empName</query>
+            <query>SELECT e FROM ru.girchev.examples.jpa.domain.chapter12.Employee12 e WHERE e.name LIKE :empName</query>
             <hint name="javax.persistence.cacheRetrieveMode"
                   value="CacheRetrieveMode.BYPASS"/>
         </named-query>
 
         <named-native-query name="findAllManagers"
-                            result-class="ru.girchev.examples.jpa.domain.chapter12.Employee">
+                            result-class="Employee12">
             <query>
                 SELECT /*+ FULL(m) */ e.id, e.name, e.salary,
                 e.manager_id, e.dept_id, e.address_id

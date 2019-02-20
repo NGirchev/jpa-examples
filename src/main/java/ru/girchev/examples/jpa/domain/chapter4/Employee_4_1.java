@@ -36,8 +36,8 @@ import javax.persistence.*;
         schema = "chapter4",
         catalog = "randomcatalog") //Some databases support the notion of a catalog.
 @NamedQuery(name = "Employee1.getEmployeeType",
-        query = "select e1.type1, e1.type2 from Employee1 e1")
-public class Employee1 {
+        query = "select e1.type1, e1.type2 from Employee_4_1 e1")
+public class Employee_4_1 {
 
     @Id
     @SequenceGenerator(name = "empl_gen_java",
@@ -121,7 +121,7 @@ public class Employee1 {
     private EmployeeType type2 = EmployeeType.PART_TIME_EMPLOYEE;
 
     @Embedded
-    private Address address;
+    private Address_4 address;
 
     public enum EmployeeType {
         FULL_TIME_EMPLOYEE,

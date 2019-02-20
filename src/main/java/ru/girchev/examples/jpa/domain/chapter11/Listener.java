@@ -9,7 +9,7 @@ import javax.persistence.PostPersist;
 public class Listener {
 
     @PostPersist
-    private void postPersist(Employee employee) {
+    private void postPersist(Employee11 employee) {
         System.out.println("GLOBAL LISTENER +" + employee.getId());
     }
 }

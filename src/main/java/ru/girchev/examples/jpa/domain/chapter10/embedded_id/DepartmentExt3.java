@@ -1,10 +1,8 @@
 package ru.girchev.examples.jpa.domain.chapter10.embedded_id;
 
 import lombok.Data;
-import ru.girchev.examples.jpa.domain.chapter4.Relations.Project;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 /**

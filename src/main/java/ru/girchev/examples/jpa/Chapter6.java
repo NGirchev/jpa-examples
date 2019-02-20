@@ -1,9 +1,8 @@
 package ru.girchev.examples.jpa;
 
-import ru.girchev.examples.jpa.domain.chapter4.Relations.Employee;
-import ru.girchev.examples.jpa.domain.chapter6.Permission;
+import ru.girchev.examples.jpa.domain.chapter4.Relations.EmployeeRel_4;
 import ru.girchev.examples.jpa.domain.chapter6.Role;
-import ru.girchev.examples.jpa.domain.chapter6.User;
+import ru.girchev.examples.jpa.domain.chapter6.User_6;
 
 import javax.persistence.*;
 
@@ -33,7 +32,7 @@ public class Chapter6 {
         EntityManager em = emf.createEntityManager();
         System.out.println(em.getProperties());
 
-        Employee e = new Employee();
+        EmployeeRel_4 e = new EmployeeRel_4();
         em.getTransaction().begin();
         em.persist(e);
         // IF I flush without opened transaction..
@@ -44,7 +43,7 @@ public class Chapter6 {
         EntityManager em2 = emf.createEntityManager();
 
         System.out.println("AFTER TRANSACTION ENTITY IS IN PC1 TRUE=" + em.contains(e));
-        System.out.println("In Cache="+emf.getCache().contains(Employee.class, e.getId()));
+        System.out.println("In Cache="+emf.getCache().contains(EmployeeRel_4.class, e.getId()));
 
         System.out.println("AFTER TRANSACTION ENTITY IS IN PC2 FALSE=" + em2.contains(e));
 
@@ -71,14 +70,14 @@ public class Chapter6 {
     public void testRollback() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User u = new User();
+        User_6 u = new User_6();
         u.setId(123L);
         u.setName("");
         em.persist(u);
         em.getTransaction().commit();
         try {
             em.getTransaction().begin();
-            User u2 = new User();
+            User_6 u2 = new User_6();
             u2.setId(123L);
             u2.setName("");
             em.persist(u2);
@@ -102,20 +101,20 @@ public class Chapter6 {
     public void referenceFind() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User u = em.getReference(User.class, 123L);
+        User_6 u = em.getReference(User_6.class, 123L);
         Role r = new Role();
         r.setUser(u);
         em.persist(r);
         em.getTransaction().commit();
         try {
-            u = em.getReference(User.class, 124L);
+            u = em.getReference(User_6.class, 124L);
             u.setName("dsgds");
         } catch (EntityNotFoundException e) {
             System.out.println("EntityNotFoundException expected = " + e.getClass());
         }
         try {
             em.getTransaction().begin();
-            u = em.getReference(User.class, 124L);
+            u = em.getReference(User_6.class, 124L);
             r = new Role();
             r.setUser(u);
             em.persist(r);
@@ -130,7 +129,7 @@ public class Chapter6 {
     public void cascadeRemove() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User user = em.find(User.class, 123L);
+        User_6 user = em.find(User_6.class, 123L);
         em.remove(em.find(Role.class, 22L));
         em.getTransaction().commit();
         System.out.println("User not in context = " + em.contains(user));
@@ -141,7 +140,7 @@ public class Chapter6 {
     public void oneToOnePersistDetached() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User user = new User();
+        User_6 user = new User_6();
         user.setId(124L);
         user.setName("Name");
         // In the book written - it's legal, without any exceptions
@@ -156,12 +155,12 @@ public class Chapter6 {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
 
-        User user = new User();
+        User_6 user = new User_6();
         user.setId(124L);
         user.setName("NewName");
         em.merge(user);
 
-        User user2 = new User();
+        User_6 user2 = new User_6();
         user2.setId(125L);
         user2.setName("Name");
         em.merge(user2);

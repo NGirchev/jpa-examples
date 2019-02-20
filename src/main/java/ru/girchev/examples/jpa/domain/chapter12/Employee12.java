@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 17.02.2019
  */
 @Data
-public class Employee extends Abstr {
+public class Employee12 extends Abstr {
 
     private Long id;
 

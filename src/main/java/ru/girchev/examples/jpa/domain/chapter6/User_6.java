@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @ToString(exclude = "role")
 @Table(schema = "chapter6")
-public class User {
+public class User_6 {
 
     @Id
     private Long id;

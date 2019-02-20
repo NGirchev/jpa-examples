@@ -13,21 +13,21 @@ import java.util.List;
 @Data
 @Entity
 @Table(schema = "chapter7")
-public class A {
+public class A_7_2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinTable(schema = "chapter7")
-    private List<B> list = new ArrayList<>();
+    private List<B_7_2> list = new ArrayList<>();
 
-    public A() {
+    public A_7_2() {
     }
 
-    public A(List<B> list) {
+    public A_7_2(List<B_7_2> list) {
         this.list = list;
-        list.stream().forEach(b -> b.setA(this));
+        list.stream().forEach(b -> b.setA2(this));
     }
 }

@@ -13,12 +13,12 @@ import java.util.List;
 @Data
 @Entity
 @Table(schema = "chapter4relations")
-public class Project {
+public class Project_4 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToMany(mappedBy = "projects")
-    private List<Employee> employees = new ArrayList<Employee>();
+    private List<EmployeeRel_4> employees = new ArrayList<EmployeeRel_4>();
 }

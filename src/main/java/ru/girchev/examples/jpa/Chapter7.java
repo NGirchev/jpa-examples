@@ -1,7 +1,5 @@
 package ru.girchev.examples.jpa;
 
-import lombok.Data;
-import org.postgresql.util.PSQLException;
 import ru.girchev.examples.jpa.domain.chapter5.Cat;
 import ru.girchev.examples.jpa.domain.chapter5.Person;
 import ru.girchev.examples.jpa.domain.chapter5.maps.Employee;
@@ -155,7 +153,7 @@ public class Chapter7 {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.persist(new A(Arrays.asList(new B(), new B())));
+            em.persist(new A_7(Arrays.asList(new B_7(), new B_7())));
             em.getTransaction().commit();
             em.getTransaction().begin();
             String q = "delete from A";
@@ -171,10 +169,10 @@ public class Chapter7 {
     public void cascadeWithRemoveWithOrphanRemoval() {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(new A2(Arrays.asList(new B2(), new B2())));
+        em.persist(new A_7_2(Arrays.asList(new B_7_2(), new B_7_2())));
         em.getTransaction().commit();
         em.getTransaction().begin();
-        em.remove(em.find(A2.class, 29L));
+        em.remove(em.find(A_7_2.class, 29L));
         em.getTransaction().commit();
         em.close();
     }

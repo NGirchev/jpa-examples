@@ -38,7 +38,7 @@ import java.util.List;
 @SqlResultSetMappings({
         @SqlResultSetMapping(name = "TestMapping",
                 entities = {
-                        @EntityResult(entityClass = Employee.class,
+                        @EntityResult(entityClass = Employee11.class,
 //                                discriminatorColumn = "TYPE",
                                 fields = {
                                 @FieldResult(name = "id", column = "id"),
@@ -61,33 +61,33 @@ import java.util.List;
 @NamedNativeQueries({
         @NamedNativeQuery(name = "emplFind", query = "select " +
                 " e.id as id, e.name as name, e.dep as department " +
-                " from chapter11.employee e",
+                " from chapter11.employee11 e",
                 resultSetMapping = "TestMapping")
         ,@NamedNativeQuery(
                 name = "FridayEmployees",
-                query = "SELECT e.id FROM chapter11.employee e"
+                query = "SELECT e.id FROM chapter11.employee11 e"
                 , resultSetMapping = "FridayEmployeeResult"
         )
         ,@NamedNativeQuery(
                 name = "constrQ",
-                query = "SELECT e.extra, e.salary FROM chapter11.employee e"
+                query = "SELECT e.extra, e.salary FROM chapter11.employee11 e"
                 , resultSetMapping = "constrRes"
         )
 })
 @ExcludeDefaultListeners
 //@ExcludeSuperclassListeners
 @EntityListeners({Listener.class})
-public class Employee extends AbstractEntity2 {
+public class Employee11 extends AbstractEntity2 {
     String name;
     String dep;
     int salary;
     int extra;
 
     @ManyToOne
-    Employee manager;
+    Employee11 manager;
 
     @OneToMany(mappedBy = "manager")
-    List<Employee> stuff;
+    List<Employee11> stuff;
 
     @Null(groups = {javax.validation.groups.Default.class})
 //    @NotNull

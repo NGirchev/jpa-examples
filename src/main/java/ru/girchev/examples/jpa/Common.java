@@ -4,7 +4,6 @@ import ru.girchev.examples.jpa.domain.Address2;
 import ru.girchev.examples.jpa.domain.Realization1;
 import ru.girchev.examples.jpa.domain.Realization2;
 import ru.girchev.examples.jpa.domain.Test;
-import ru.girchev.examples.jpa.domain.chapter12.Employee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

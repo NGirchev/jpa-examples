@@ -186,10 +186,10 @@ public class Chapter9 {
                 .setParameter("nameParam", "Popov")
                 .getResultList());
 
-        System.out.println(em.createQuery(
-                "select c from Car c where ALL c.owners"
-                + " (select co from CarOwner co" +
-                        " where count(co.cars) > 1)").getResultList());
+//        System.out.println(em.createQuery(
+//                "select c from Car c where ALL c.owners"
+//                + " (select co from CarOwner co" +
+//                        " where count(co.cars) > 1)").getResultList());
 
         em.close();
     }

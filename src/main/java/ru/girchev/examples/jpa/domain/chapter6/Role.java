@@ -20,5 +20,5 @@ public class Role {
     private Long id;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    private User user;
+    private User_6 user;
 }
