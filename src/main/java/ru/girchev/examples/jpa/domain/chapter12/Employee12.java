@@ -3,7 +3,6 @@ package ru.girchev.examples.jpa.domain.chapter12;
 import lombok.Data;
 
 import javax.persistence.Column;
-import java.util.List;
 
 /**
  * @author Girchev N.A.

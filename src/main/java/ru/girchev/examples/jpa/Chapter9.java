@@ -7,11 +7,17 @@ import ru.girchev.examples.jpa.domain.chapter5.maps.Employee;
 import ru.girchev.examples.jpa.domain.chapter5.maps.Employee_;
 import ru.girchev.examples.jpa.domain.chapter8.*;
 import ru.girchev.examples.jpa.domain.chapter9.CarInfo;
+import ru.girchev.examples.jpa.domain.chapter9.NewEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.EmbeddableType;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +103,8 @@ public class Chapter9 {
                 path.get("name")));
         System.out.println(em.createQuery(c).getResultList());
         next1(em, cb);
+        next2(em, cb);
+        em.close();
     }
 
     /**
@@ -250,16 +258,51 @@ public class Chapter9 {
         CriteriaQuery<String> c = cb.createQuery(String.class);
         Root<Car> car = c.from(Car.class);
         c.select(cb.function("initcap", String.class, car.get("name")))
-        .orderBy(cb.desc(car.get(Car_.name)));
+                .orderBy(cb.desc(car.get(Car_.name)));
         System.out.println(em.createQuery(c).getResultList());
-        em.close();
+    }
+
+    private void next2(EntityManager em, CriteriaBuilder cb) {
+        Metamodel metamodel = em.getMetamodel();
+        EntityType<Car> car = metamodel.entity(Car.class);
+        System.out.println(car.getAttributes());
+        EntityType<NewEntity> newEntity = metamodel.entity(NewEntity.class);
+        System.out.println(newEntity.getAttributes());
+        ManagedType<Car> carManagedType = metamodel.managedType(Car.class);
+        System.out.println(carManagedType.getAttributes());
+
+        CriteriaQuery<Object> query2 = cb.createQuery();
+        Root<Employee> employeeRoot2 = query2.from(Employee.class);
+        EntityType<Employee> empModel2 = employeeRoot2.getModel();
+        MapJoin<Employee, ?, ?> mapJoin2
+                = employeeRoot2.join(empModel2.getMap("phones"), JoinType.INNER);
+        CriteriaQuery<Object> multiselect2 = query2
+                .multiselect(
+                        employeeRoot2.get("name"),
+                        mapJoin2.key(),
+                        mapJoin2.value()
+                ).distinct(true);
+        List<Object> resultList2 = em.createQuery(multiselect2).getResultList();
+        resultList2.stream().forEach(o -> {
+            for (Object e: (Object[]) o) {
+                System.out.print(e + " ");
+            }
+            System.out.println();
+        });
+
+        CriteriaQuery<Car> query = cb.createQuery(Car.class);
+        Root<Car> from = query.from(Car.class);
+        EntityType<Car> model = from.getModel();
+        SingularAttribute<? super Car, String> name = model.getSingularAttribute("name", String.class);
+        query.select(from).where(cb.equal(from.get(name), "skoda"));
+        System.out.println(em.createQuery(query).getResultList());
     }
 
     private List<List<String>> getValues(List list) {
         List<List<String>> res = new ArrayList<>();
         for (Object obj : list) {
             List<String> strings = new ArrayList<>();
-            for (Object o : (Object[]) obj){
+            for (Object o : (Object[]) obj) {
                 strings.add(o.toString());
             }
             res.add(strings);

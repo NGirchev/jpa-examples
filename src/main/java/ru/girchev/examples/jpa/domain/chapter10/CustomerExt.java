@@ -1,9 +1,15 @@
 package ru.girchev.examples.jpa.domain.chapter10;
 
-import com.sun.corba.se.pept.transport.ContactInfo;
-import ru.girchev.examples.jpa.domain.chapter8.AbstractEntity;
-
-import javax.persistence.*;
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Table;
 
 /**
  * @author Girchev N.A.
