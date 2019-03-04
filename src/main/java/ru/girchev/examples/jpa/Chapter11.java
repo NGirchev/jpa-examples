@@ -1,7 +1,9 @@
 package ru.girchev.examples.jpa;
 
+import org.hibernate.Session;
 import ru.girchev.examples.jpa.domain.chapter11.EmpWrapper;
 import ru.girchev.examples.jpa.domain.chapter11.Employee11;
+import ru.girchev.examples.jpa.domain.chapter11.Stock;
 import ru.girchev.examples.jpa.domain.chapter5.maps.Department;
 
 import javax.persistence.*;
@@ -11,6 +13,9 @@ import javax.validation.ValidatorFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author Girchev N.A.
@@ -65,7 +70,7 @@ public class Chapter11 {
 
 
         //CAN BE BEFORE
-        // em.createQuery("").setLockMode(LockModeType.PESSIMISTIC_WRITE);
+//         em.createQuery("").setLockMode(LockModeType.PESSIMISTIC_WRITE);
         em.getTransaction().begin();
         //IN TRANSACTION
         // OPTIMISTIC READ == OPTIMISTIC
@@ -126,5 +131,70 @@ public class Chapter11 {
         properties.put("javax.persistence.lock.scope", PessimisticLockScope.EXTENDED);
         properties.put("javax.persistence.lock.scope", PessimisticLockScope.NORMAL); //default
         em.find(Employee11.class, id, LockModeType.PESSIMISTIC_FORCE_INCREMENT, properties);
+    }
+
+
+    //Read committed - is default in the most cases
+    //READ UNCOMMITTED: Lost updates
+    //                  Dirty reads
+    //                  Non-repeatable reads
+    //                  Phantoms
+    public void test1() {
+        prepare();
+        System.out.println("ISOLATION LEVEL:" + emf.getProperties().get("hibernate.connection.isolation"));
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        Future<?> submit1 = executor.submit(() -> {
+            EntityManager em1 = emf.createEntityManager();
+            em1.getTransaction().begin();
+            try {
+                Thread.currentThread().sleep(500L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            em1
+                    .createQuery("update Stock set quantity = (1+(quantity))")
+                    .executeUpdate();
+            try {
+                Thread.currentThread().sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+//            Stock stock = em1.find(Stock.class, 52L);
+            em1.getTransaction().commit();
+            em1.close();
+        });
+        Future<?> submit2 = executor.submit(() -> {
+            EntityManager em2 = emf.createEntityManager();
+            em2.getTransaction().begin();
+            try {
+                Thread.currentThread().sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            em2
+                    .createQuery("update Stock set quantity = (1+(quantity))")
+                    .executeUpdate();
+            try {
+                Thread.currentThread().sleep(500L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+//            Stock stock = em2.find(Stock.class, 52L);
+            em2.getTransaction().commit();
+            em2.close();
+        });
+        executor.shutdown();
+    }
+
+    private void prepare() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        Stock stock = new Stock();
+        stock.setName("Name");
+        stock.setQuantity(2.0);
+        em.persist(stock);
+        transaction.commit();
+        em.close();
     }
 }
