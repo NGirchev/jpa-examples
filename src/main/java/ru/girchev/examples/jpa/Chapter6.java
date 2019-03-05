@@ -158,15 +158,148 @@ public class Chapter6 {
         User_6 user = new User_6();
         user.setId(124L);
         user.setName("NewName");
-        em.merge(user);
+        user = em.merge(user);
+        System.out.println("CONTAINS="+em.contains(user));
 
         User_6 user2 = new User_6();
         user2.setId(125L);
         user2.setName("Name");
-        em.merge(user2);
+        user2 = em.merge(user2);
+        System.out.println("CONTAINS="+em.contains(user2));
 
         Role r = new Role();
-        em.merge(r);
+        Role merge = em.merge(r);
+        System.out.println("CONTAINS="+em.contains(merge));
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public void persistRemoveMergeTest() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        Role r = new Role();
+        em.persist(r);
+        em.remove(r);
+        em.persist(r);
+
+        em.getTransaction().commit();
+//        prePersist null
+//        preRemove 55
+//        postPersist 55    // has no postRemove, only 1 postPersist
+        System.out.println("-------------");
+        em.getTransaction().begin();
+
+        Role r2;
+        r2 = em.merge(r);
+        em.remove(r2);
+//        em.refresh(r2);  IllegalArgumentException: Entity not managed
+
+        Role r3 = new Role();
+        em.persist(r3);
+
+        em.getTransaction().commit();
+//        preRemove 55
+//        prePersist null
+//        postPersist 56
+//        postRemove 55     //postRemove the last operation
+        System.out.println("-------------");
+        em.getTransaction().begin();
+        r3 = em.merge(r3);
+        em.remove(r3);
+//        r3 = em.merge(r3); java.lang.IllegalArgumentException:
+// org.hibernate.ObjectDeletedException: deleted instance passed to merge
+
+        Role r4 = new Role();
+        em.persist(r4);
+        em.getTransaction().commit();
+//        preRemove 56
+//        prePersist null
+//        postPersist 57
+//        postRemove 56  //identity to previous block, example of exceptions
+        System.out.println("-------------");
+        em.getTransaction().begin();
+        r4 = em.merge(r4);
+        r4.setUser(new User_6());
+        em.refresh(r4);
+        r4.setName("NewName");
+
+        Role r5 = new Role();
+        em.persist(r5);
+
+        em.refresh(r4);
+        r4.setName("NewName2");
+        em.getTransaction().commit();
+//        postLoad 57
+//        prePersist null
+//        postLoad 57
+//        preUpdate 57
+//        postPersist 58
+//        postUpdate 57
+        System.out.println("-------------");
+        em.getTransaction().begin();
+        Role r6 = new Role();
+        em.persist(r6);
+        r6.setName("Name");
+        em.remove(r6);
+        em.remove(r6);
+        em.getTransaction().commit();
+//        prePersist null   // has no preUpdate
+//        preRemove 59
+//        postPersist 59    // has no postUpdate
+//        postRemove 59    // persisted before remove, but not updated
+        System.out.println("-------------");
+        em.getTransaction().begin();
+        Role r7 = new Role();
+        em.persist(r7);
+        r7.setName("NewName");
+        em.getTransaction().commit();
+//        prePersist null
+//        preUpdate 60
+//        postPersist 60
+//        postUpdate 60
+        System.out.println("-------------");
+        em.getTransaction().begin();
+        r7 = em.merge(r7);
+        r7.setName("NewName2");
+
+        Role r8 = new Role();
+        em.persist(r8);
+        em.persist(r8);
+
+        r7.setName("NewName5");
+        em.getTransaction().commit();
+//        prePersist null
+//        preUpdate 60
+//        postPersist 61
+//        postUpdate 60     // 2 postUpdate and 2 preUpdate merged to 1 operation
+        System.out.println("-------------");
+        em.getTransaction().begin();
+        r7 = em.merge(r7);
+        r7.setName("NewName3");
+        em.remove(r7);
+        r7.setName("NewName4");
+        em.getTransaction().commit();
+//        preRemove 60      // has no preUpdate
+//        postRemove 60     // has no postUpdate
+        System.out.println("-------------");
+
+        em.getTransaction().begin();
+        r8 = em.merge(r8);
+        em.refresh(r8);
+//        em.persist(r8);
+        em.refresh(r8);
+        r8.setName("sdgs");
+//        em.remove(r8);
+//        em.persist(r8);
+//        em.persist(r8);
+        em.refresh(r8);
+        em.merge(r8);
+        em.refresh(r8);
+        em.remove(r8);
+        em.persist(r8);
+        em.refresh(r8);
+//        r8.setName("sdg");
         em.getTransaction().commit();
         em.close();
     }

@@ -58,6 +58,7 @@ public class Main {
         common.test();
 
         chapter9.init();
+        chapter6.persistRemoveMergeTest();
 
         emf.close();
         System.out.println("FINISHED!!!");

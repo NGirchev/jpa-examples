@@ -21,7 +21,7 @@ import javax.persistence.*;
 @Table(name = "chapter4.id1str")
 @NamedQuery(name = "jpaschema.boringQuery", query = "select j from jpaschema j")
 public class Id1String {
-
+    //@TableGenerator(name = "", schema = "")
     /**
      * • Primitive Java types: byte, int, short, long, char
      * • Wrapper classes of primitive Java types: Byte, Integer, Short, Long, Character

@@ -54,6 +54,7 @@ public class Chapter9 {
 
         CriteriaQuery<Car> q1 = cb.createQuery(Car.class);
         Root<Car> fromCar = q1.from(Car.class);
+//        fromCar.fetch()
         Predicate equal = cb.equal(fromCar.get(Car_.name), "skoda");
         q1.select(fromCar).where(equal);
 

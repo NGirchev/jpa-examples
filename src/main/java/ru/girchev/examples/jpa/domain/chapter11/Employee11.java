@@ -122,7 +122,6 @@ public class Employee11 extends AbstractEntity2 {
 //    @PreRemove
 //    @PostRemove
 
-//    @PreDestroy
 //    @PostLoad
     private void postPersist() {
         System.out.println("ENTITY LISTENER = "+id);
