@@ -18,6 +18,8 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
+import java.security.acl.Owner;
+import java.util.AbstractQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +29,7 @@ import java.util.List;
  *  JPQL Clause         Criteria API Interface      Method
  *
  SELECT              CriteriaQuery               select()
- Subquery                    select()
+                     Subquery                    select()
 
  FROM                AbstractQuery               from()
  WHERE               AbstractQuery               where()
@@ -105,11 +107,12 @@ public class Chapter9 {
         System.out.println(em.createQuery(c).getResultList());
         next1(em, cb);
         next2(em, cb);
+        next3(em, cb);
         em.close();
     }
 
     /**
-     JP QL Expression       CriteriaBuilder Method
+     JPQL Expression        CriteriaBuilder Method
 
      IS EMPTY               isEmpty()
      IS NOT EMPTY           isNotEmpty()
@@ -309,5 +312,61 @@ public class Chapter9 {
             res.add(strings);
         }
         return res;
+    }
+
+    private void next3(EntityManager em, CriteriaBuilder cb) {
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Car> from = ((AbstractQuery)query).from(Car.class);
+        ((AbstractQuery)query.select(from.get(Car_.id)))
+             .groupBy(from.get(Car_.id));
+        System.out.println(em.createQuery(query).getResultList());
+
+        CriteriaQuery<Tuple> query2 = cb.createTupleQuery();
+        Root<Car> from2 = query2.from(Car.class);
+        query2.multiselect(from2.get(Car_.id), from2.get(Car_.name));
+        System.out.println(em.createQuery(query2).getResultList().get(0).get(1));
+
+        CriteriaQuery<Garage> query3 = cb.createQuery(Garage.class);
+        Root<Car> from3 = query3.from(Car.class);
+        Join<Car, Garage> join = from3.join(Car_.garage, JoinType.LEFT);
+        query3.select(join);
+        System.out.println(em.createQuery(query3).getResultList().size());
+
+        CriteriaQuery<Car> query4 = cb.createQuery(Car.class);
+        Root<Car> from4 = query4.from(Car.class);
+        from4.fetch(Car_.owners, JoinType.LEFT);
+        query4.select(from4).distinct(true);
+        System.out.println(em.createQuery(query4).getResultList().size());
+
+        CriteriaQuery<Garage> query5 = cb.createQuery(Garage.class);
+        Root<Car> from5 = query5.from(Car.class);
+        Root<Garage> from5Garage = query5.from(Garage.class);
+        query5.select(from5Garage).where(cb.equal(from5.get(Car_.name), "skoda"));
+        System.out.println(em.createQuery(query5).getResultList().size());
+
+//        выбрать всех владельцев машин, у которых машины в каком-то гараже
+//        select * from chapter8.carowner co
+//        join chapter8.carowner_car coc on coc.owners_id = co.id
+//        join chapter8.car c on c.id = coc.cars_id
+//        WHERE c.garage_id in (SELECT g.id FROM chapter8.garage g);
+
+        // Subqueries may be used in the WHERE or HAVING clause.
+        CriteriaQuery<CarOwner> query6 = cb.createQuery(CarOwner.class);
+        Root<CarOwner> from6 = query6.from(CarOwner.class);
+        ListJoin<CarOwner, Car> join1 = from6.join(CarOwner_.cars);
+        Subquery<Garage> subquery = query6.subquery(Garage.class);
+        subquery.select(subquery.from(Garage.class));
+        query6.select(from6).where(join1.get(Car_.garage).in(subquery));
+        System.out.println(em.createQuery(query6.distinct(true)).getResultList().size());
+
+
+        CriteriaQuery<CarOwner> query7 = cb.createQuery(CarOwner.class);
+        Root<CarOwner> ownerRoot = query7.from(CarOwner.class);
+        Subquery<Long> subquery1 = query7.subquery(Long.class);
+        Root<CarOwner> ownerRoot2 = subquery1.correlate(ownerRoot);
+        subquery1.select(cb.count(ownerRoot2.join(CarOwner_.cars)));
+        Predicate predicate = cb.greaterThanOrEqualTo(subquery1, 2L);
+        query7.select(ownerRoot).where(predicate);
+        System.out.println(em.createQuery(query7).getResultList().size());
     }
 }
