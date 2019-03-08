@@ -284,22 +284,15 @@ public class Chapter6 {
 //        postRemove 60     // has no postUpdate
         System.out.println("-------------");
 
+
+        Role r10 = new Role();
         em.getTransaction().begin();
-        r8 = em.merge(r8);
-        em.refresh(r8);
-//        em.persist(r8);
-        em.refresh(r8);
-        r8.setName("sdgs");
-//        em.remove(r8);
-//        em.persist(r8);
-//        em.persist(r8);
-        em.refresh(r8);
-        em.merge(r8);
-        em.refresh(r8);
-        em.remove(r8);
-        em.persist(r8);
-        em.refresh(r8);
-//        r8.setName("sdg");
+        em.persist(r10);
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        em.remove(r10);
+        em.merge(r10);
         em.getTransaction().commit();
         em.close();
     }

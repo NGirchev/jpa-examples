@@ -15,4 +15,8 @@ import javax.persistence.*;
 public abstract class AbstractInheritance {
     @Id @GeneratedValue Long id;
     private String val;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="ADDR")
+    protected Address2 address;
 }

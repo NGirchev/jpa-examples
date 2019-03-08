@@ -19,6 +19,9 @@ public class Department2 {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * Embeddable as a Key, Entity as a Value!!!
+     */
     @OneToMany(mappedBy="embeddedTestDepartment", cascade = CascadeType.ALL)
     private Map<EmployeeName2, Employee2> embeddedTestEmployee
             = new HashMap<EmployeeName2, Employee2>();

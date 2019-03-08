@@ -11,7 +11,7 @@
         <!--<validation-mode>AUTO</validation-mode>-->
         <!--<validation-mode>CALLBACK</validation-mode>-->
         <!--<validation-mode>NONE</validation-mode>-->
-
+        <class>ru.girchev.examples.jpa.domain.chapter12.Car12</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/mytestdb" />
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />

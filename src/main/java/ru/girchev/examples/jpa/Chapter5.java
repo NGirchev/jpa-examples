@@ -13,7 +13,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -217,6 +217,24 @@ public class Chapter5 {
 
         em.persist(employee3);
         em.persist(department3);
+
+        Cart c = new Cart();
+        ItemEmbeddable ie = new ItemEmbeddable();
+        ItemAddress address = new ItemAddress();
+        ItemMaps item = new ItemMaps();
+        item.setFakeId("23");
+        item.setId(3L);
+        address.setId(2L);
+        address.setStreet("Street");
+        ie.setName("Name1");
+        ie.setPrice(2.4);
+        ie.setItemAddress(address);
+        c.setId(1L);
+        c.setEmbeddableMap(Collections.singletonMap(ie.getName(), ie));
+        c.setItemStringMap(Collections.singletonMap(item, "Str"));
+        c.setStringItemMap(Collections.singletonMap("666", item));
+        em.persist(item);
+        em.persist(c);
 
         em.getTransaction().commit();
         em.close();

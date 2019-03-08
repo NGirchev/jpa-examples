@@ -368,5 +368,58 @@ public class Chapter9 {
         Predicate predicate = cb.greaterThanOrEqualTo(subquery1, 2L);
         query7.select(ownerRoot).where(predicate);
         System.out.println(em.createQuery(query7).getResultList().size());
+
+        String q = "select count(distinct e) from Department d, Employee e";
+        System.out.println("distinct count: "+em.createQuery(q)
+                .getResultList()); //4
+
+        //not working
+        q = "select distinct count(e) from Department d, Employee e";
+        System.out.println("distinct count: "+em.createQuery(q)
+                .getResultList()); //8
+
+        //Only identification variables and path expressions are currently supported in
+        // the GROUP BY clause by all the JPA implementations.
+
+        // Will not work on some implementations
+        q = "SELECT SUBSTRING(e.name, 1, 1)" +
+                " FROM Employee e" +
+                " GROUP BY SUBSTRING(e.name, 1, 1)";
+        System.out.println("First letter: "+em.createQuery(q)
+                .getResultList());
+
+
+        //GROUP BY with Aggregate Functions
+        //JPQL supports the five aggregate functions of SQL:
+        //
+        //COUNT - returns a long value representing the number of elements.
+        //SUM - returns the sum of numeric values.
+        //AVG - returns the average of numeric values as a double value.
+        //MIN - returns the minimum of comparable values (numeric, strings, dates).
+        //MAX - returns the maximum of comparable values (numeric, strings, dates).
+
+        q = "SELECT SUBSTRING(e.name, 1, 1), COUNT(e), COUNT(DISTINCT e.name)" +
+                " FROM Employee e" +
+                " GROUP BY SUBSTRING(e.name, 1, 1)";
+        em.createQuery(q).getResultList().stream().forEach( e-> {
+            Object[] o = (Object[])e;
+            System.out.println(o[0]+" "+ o[1]+" "+o[2]);
+        });
+
+//        countDistinct - is in CriteriaBuilder
+//        min, least - return an expression representing the minimum of comparable values.
+//        max, greatest - return an expression representing the maximum of comparable values.
+
+        //size in hibernate
+        //but count(e.phones) will work in some implementations
+        q = "select e.phones.size from Employee e";
+        System.out.println("size: "+em.createQuery(q)
+                .getResultList());
+//        This query works on some implementations but not with others.
+// Ideally, as per Section 4.8.5, which says, "The path expression argument
+// to COUNT may terminate in either a state field or a association field,
+// or the argument to COUNT may be an identification variable.", it is a valid
+// query and should work.
+
     }
 }

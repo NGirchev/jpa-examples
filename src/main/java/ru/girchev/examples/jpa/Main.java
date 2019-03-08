@@ -5,6 +5,10 @@ import javax.persistence.Persistence;
 import java.text.ParseException;
 
 /**
+ *
+ * The onMessage method of a MDB can only have Required or NotSupported.
+ *
+ *
  There are two transaction-management types supported by JPA. The first is resource-local
  transactions, which are the native transactions of the JDBC drivers that are referenced by a
  persistence unit. The second transaction-management type is JTA transactions, which are the
@@ -58,7 +62,7 @@ public class Main {
         common.test();
 
         chapter9.init();
-//        chapter6.persistRemoveMergeTest();
+        chapter6.persistRemoveMergeTest();
 
         emf.close();
         System.out.println("FINISHED!!!");

@@ -13,6 +13,7 @@ http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
             <!--<catalog></catalog>-->
             <description>Test</description>
             <!--<delimited-identifiers/>-->
+            <!--<cascade-persist/>-->
             <entity-listeners>
                 <!--<entity-listener class=""></entity-listener>-->
             </entity-listeners>

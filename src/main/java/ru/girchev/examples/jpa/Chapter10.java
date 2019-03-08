@@ -4,11 +4,16 @@ import ru.girchev.examples.jpa.domain.chapter10.EmployeeExt;
 import ru.girchev.examples.jpa.domain.chapter10.EmployeeId;
 import ru.girchev.examples.jpa.domain.chapter10.derived_identifiers.Dependent4;
 import ru.girchev.examples.jpa.domain.chapter10.derived_identifiers.Parent4;
+import ru.girchev.examples.jpa.domain.chapter10.embedded_id.DepartmentEmbId;
+import ru.girchev.examples.jpa.domain.chapter10.embedded_id.DepartmentExt3;
+import ru.girchev.examples.jpa.domain.chapter10.embedded_id.ProjectEmbId;
+import ru.girchev.examples.jpa.domain.chapter10.embedded_id.ProjectExt3;
 import ru.girchev.examples.jpa.domain.chapter10.inheritance.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author Girchev N.A.
@@ -34,6 +39,26 @@ public class Chapter10 {
         employeeExt.setCountry("Russia");
         employeeExt.setName("Ivanov");
         em.persist(employeeExt);
+
+        DepartmentEmbId departmentEmbId = new DepartmentEmbId();
+        departmentEmbId.setDepId(5L);
+        departmentEmbId.setDepName("Department");
+
+        ProjectEmbId projectEmbId = new ProjectEmbId();
+        projectEmbId.setDepartmentEmbId(departmentEmbId);
+        projectEmbId.setId(6L);
+
+        DepartmentExt3 departmentExt3 = new DepartmentExt3();
+        departmentExt3.setDepartmentEmbId(departmentEmbId);
+
+        em.persist(departmentExt3);
+
+        ProjectExt3 projectExt3 = new ProjectExt3();
+        projectExt3.setDepartmentExt3(departmentExt3);
+        projectExt3.setProjectEmbId(projectEmbId);
+
+        departmentExt3.setProjectExt3s(Arrays.asList(projectExt3));
+        em.persist(projectExt3);
 
         em.getTransaction().commit();
         em.clear();

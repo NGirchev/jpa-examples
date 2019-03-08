@@ -91,6 +91,7 @@ public class Person {
     @CollectionTable(schema = "chapter5")
     Set<String> nickNames;
 
+    //ORDER COLUMN can be on @OneToMany, @ManyToMany and @ElementCollection
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(schema = "chapter5")
     @OrderColumn(name = "order_col"
