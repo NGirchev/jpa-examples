@@ -75,16 +75,18 @@ public class Chapter9 {
         CriteriaQuery<Tuple> tupleQuery = cb.createTupleQuery();
         Root<Car> fromCar3 = tupleQuery.from(Car.class);
         tupleQuery.select(cb.tuple(fromCar3.get(Car_.id).alias("id"),
-                fromCar3.get(Car_.name)).alias("name2"));
+                fromCar3.get(Car_.name).alias("name2"),
+                fromCar3.get(Car_.garage).get(Garage_.id).alias("garageId")));
 
         List<Tuple> resultList = em.createQuery(tupleQuery).getResultList();
         System.out.println("Tuple size: " + resultList.size());
         for (int i = 0; i < resultList.size(); i++) {
             Tuple tuple = resultList.get(i);
             System.out.println("One tuple alias elements="+tuple.getElements().get(0).getAlias()
-                    +" "+tuple.getElements().get(1).getAlias());
+                    +" "+tuple.getElements().get(1).getAlias()+" "+tuple.getElements().get(2).getAlias());
             System.out.println("One tuple[id] element="+tuple.get("id", Long.class));
             System.out.println("One tuple[1] element="+tuple.get(1, String.class));
+            System.out.println("One tuple[garageId] element="+tuple.get("garageId", Long.class));
             List<Object> elements = Arrays.asList(tuple.toArray());
             System.out.println("TupleElement[" + i +"] size: " + elements.size());
             for (int j = 0; j < elements.size(); j++) {
@@ -132,7 +134,18 @@ public class Chapter9 {
      /                      quot()
      COALESCE               coalesce()
      NULLIF                 nullif()
+
+         // return customers who have changed their last name
+         select nullif( c.previousName.last, c.name.last )
+         from Customer c
+
+         // equivalent CASE expression
+         select case when c.previousName.last = c.name.last then null
+         else c.previousName.last end
+         from Customer c
+
      CASE                   selectCase()
+        select case c.nickName when null then '<no nick name>' else c.nickName end from Customer c
 
      ABS                    abs()
      CONCAT                 concat()
@@ -141,8 +154,15 @@ public class Chapter9 {
      CURRENT_TIMESTAMP      currentTimestamp()
      LENGTH                 length()
      LOCATE                 locate()
+
+         The LOCATE(str, substr [, start]) function searches a substring and returns its position.
+         For example:
+         LOCATE('India', 'a') is evaluated to 5.
+
      LOWER                  lower()
      MOD                    mod()
+        MOD(11, 3) is evaluated to 2 (3 goes into 11 three times with a remainder of 2)
+       
      SIZE                   size()
      SQRT                   sqrt()
      SUBSTRING              substring()
@@ -421,5 +441,10 @@ public class Chapter9 {
 // or the argument to COUNT may be an identification variable.", it is a valid
 // query and should work.
 
+
+        q = "select e.salary from Employee11 e " +
+                " where e.salary >= ALL(select (e2.salary) from Employee11 e2)";
+        System.out.println("size: "+em.createQuery(q)
+                .getResultList());
     }
 }

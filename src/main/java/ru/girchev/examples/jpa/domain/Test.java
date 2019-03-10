@@ -13,6 +13,8 @@ public final class Test {
     @Id
     private Long id;
 
+    private AddressNew addressNew;
+
     private String str;
 
     public Long getId() {
